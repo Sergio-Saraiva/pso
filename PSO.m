@@ -4,15 +4,16 @@
 
 clear;
 clc;
-%Passo 1
+%Passo 1 determinação das variaveis
 d = 2; %numero de variáveis da função
 n = input('Informe o número de particulas desejadas\n');
 w = input('Informe o parametro de inércia (entre 0,9 e 0,4 de preferencia)\n');
 e = input('Informe o número de épocas\n');
 c = 2.05;
 r1 = rand(1);
-r2 = rand(1);
+r2 = rand(1);  
 
+%determinação das particulas e do vetor velocidade
 for i=1:n
     for j=1:d
         x(i,j) = randi(20);
@@ -23,11 +24,12 @@ end
 X = x(:,1);%divisão das posições X do vetor x
 Y = x(:,2);%divisão das posições Y do vetor x
 
+%inicialização do vetor de posições e da posição global
 p = zeros(n,d);
 pg = 0;
 
 
-%Passo 2
+%Passo 2 - avaliação de todas as particulas
 for i=1:n
     f(i) = abs((X(i)*(sin(Y(i))*(pi/4))) + (Y(i)*(sin(X(i))*(pi/4))));
 end
@@ -48,10 +50,15 @@ a=0;%resetamos o a
 
 for k=1:e
     %Passo 3 - atualização do valores de x e v
+    %se os valores forem maiores que 20, não são atualizados
     for i=1:n
         for j=1:d
-            v(i,j) = w*v(i,j)+c*r1*(p(i,j)-x(i,j))+c*r2*(pg(1,j)-x(i,j));
-            x(i,j) = x(i,j)+v(i,j);
+            if (w*v(i,j)+c*r1*(p(i,j)-x(i,j))+c*r2*(pg(1,j)-x(i,j)))<20
+                v(i,j) = w*v(i,j)+c*r1*(p(i,j)-x(i,j))+c*r2*(pg(1,j)-x(i,j));
+            end
+            if (x(i,j)+v(i,j))<20
+                x(i,j) = x(i,j)+v(i,j);
+            end
         end
     end
 
